@@ -7,11 +7,12 @@ from torch.nn import Transformer
 from torch.nn.utils.rnn import pad_sequence
 from torch.utils.data import DataLoader
 import math
+import logging
 
 # Setup device
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-with open('config.json') as f:
+with open('../config.json') as f:
     config = json.load(f)
 
 # Posiotnal Encoding
@@ -60,7 +61,14 @@ class TranslationModel(nn.Module):
                                        num_decoder_layers=decoder_layer,
                                        dim_feedforward=d_ffn, dropout=dropout)
         self.generator = nn.Linear(d_model, tgt_vocab_size)
-    
+        
+        logging.basicConfig(filename='model.log', level=logging.INFO, 
+                            format='%(asctime)s - %(levelname)s - %(message)s', 
+                            datefmt='%d-%b-%y %H:%M:%S')
+        logging.info(f"Number of layer: {encoder_layer} encoder, {decoder_layer} decoder")
+        logging.info(f"Model dimension: {d_model}")
+        logging.info(f"Feedforward dimension: {d_ffn}")
+        logging.info(f"Vocab size: {src_vocab_size} source, {tgt_vocab_size} target")
     def encode(self, src: Tensor, src_mask: Tensor):
         return self.Transformer.encoder(self.positional_encoding
                                         (self.src_token_embedding(src)), src_mask
