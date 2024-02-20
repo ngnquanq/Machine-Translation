@@ -2,8 +2,8 @@
 {
     "DATASET_1": "mt_eng_vietnamese",
     "DATASET_2": "iwslt2015-en-vi",   
-    "SRC_LANGUAGE" : "vi",
-    "TGT_LANGUAGE" : "en",
+    "SRC_LANGUAGE" : "en",
+    "TGT_LANGUAGE" : "vi",
     "TOKENIZER": "basic_english",
     "UNK_IDX": 0,
     "PAD_IDX": 1,
