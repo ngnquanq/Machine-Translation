@@ -69,6 +69,12 @@ class TranslationModel(nn.Module):
         logging.info(f"Model dimension: {d_model}")
         logging.info(f"Feedforward dimension: {d_ffn}")
         logging.info(f"Vocab size: {src_vocab_size} source, {tgt_vocab_size} target")
+        logging.info(f"Parameters: {self.count_param()}")
+        logging.info("===============================================================")
+        
+    def count_param(self):
+            return sum(p.numel() for p in self.Transformer.parameters())
+    
     def encode(self, src: Tensor, src_mask: Tensor):
         return self.Transformer.encoder(self.positional_encoding
                                         (self.src_token_embedding(src)), src_mask
@@ -110,3 +116,5 @@ def create_mask(src, tgt):
     tgt_padding_mask = (tgt == config["PAD_IDX"])
     return src_mask, tgt_mask, src_padding_mask, tgt_padding_mask
     
+
+model = TranslationModel(10,10,512,4,1000,1000,128,0.1)
