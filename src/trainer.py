@@ -74,10 +74,7 @@ class Trainer:
         for epoch in range(1, self.epochs + 1):
             start_time = time.time()
             train_loss = self._train_epoch(self.model, self.optimizer, self.criterion, self.train_dataloader, self.device)
-            end_time = time.time()
-            print(f"Epoch: {epoch+1}, Train loss: {train_loss}, Epoch time = {end_time - start_time}s")
-            
-            test_loss = self.evaluate(self.model, self.test_dataloader, self.criterion, self.optimizer)
-            print(f"Test loss: {test_loss}")
-            
-            print("="*50)
+            test_loss = self.evaluate(self.model, self.criterion, self.test_dataloader, self.device)
+            end_time = time.time() 
+            print ((f" Epoch : { epoch }, Train loss : { train_loss :.3f}, Val loss : {test_loss:.3f}, "f" Epoch time = {( end_time - start_time ):.3f}s"))
+            logging.info(f"Epoch : {epoch}, Train loss : {train_loss:.3f}, Val loss : {test_loss:.3f}, Epoch time = {(end_time - start_time):.3f}s")

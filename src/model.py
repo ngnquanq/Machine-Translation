@@ -8,11 +8,18 @@ from torch.nn.utils.rnn import pad_sequence
 from torch.utils.data import DataLoader
 import math
 import logging
+import os
+
 
 # Setup device
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+# Get the directory of the current script
+script_dir = os.path.dirname(os.path.realpath(__file__))
 
-with open('../config.json') as f:
+# Calculate the path to the file
+file_path = os.path.join(script_dir, 'config.json')
+
+with open(file_path) as f:
     config = json.load(f)
 
 # Posiotnal Encoding
@@ -116,5 +123,3 @@ def create_mask(src, tgt):
     tgt_padding_mask = (tgt == config["PAD_IDX"])
     return src_mask, tgt_mask, src_padding_mask, tgt_padding_mask
     
-
-model = TranslationModel(10,10,512,4,1000,1000,128,0.1)
