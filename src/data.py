@@ -13,18 +13,17 @@ from torchtext.data.utils import get_tokenizer
 from torchtext.vocab import build_vocab_from_iterator
 
 import math
-
-with open('src/config.json') as f:
+import json
+with open('C:\\Users\\84898\\Desktop\\project\\WIP\\Machine Translation\\src\\config.json') as f:
     config = json.load(f)
-
 def prepare_data():
     data = load_dataset(config['DATASET1'], config['DATASET2'])
     SRC_LANGUAGE = config['SRC_LANGUAGE']
     TGT_LANGUAGE = config['TGT_LANGUAGE']
     token_transform = {}
     vocab_transform = {}
-    token_transform['SRC_LANGUAGE'] = get_tokenizer(config['TOKENIZER'])
-    token_transform['TGT_LANGUAGE'] = get_tokenizer(config['TOKENIZER'])
+    token_transform[SRC_LANGUAGE] = get_tokenizer(config['TOKENIZER'])
+    token_transform[TGT_LANGUAGE] = get_tokenizer(config['TOKENIZER'])
     UNK_IDX, PAD_IDX, BOS_IDX, EOS_IDX = 0, 1, 2, 3
     special_symbols = ['<unk>', '<pad>', '<bos>', '<eos>']
     def yield_tokens(data_iter, language):

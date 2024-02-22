@@ -13,14 +13,6 @@ import os
 
 # Setup device
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-# Get the directory of the current script
-script_dir = os.path.dirname(os.path.realpath(__file__))
-
-# Calculate the path to the file
-file_path = os.path.join(script_dir, 'config.json')
-
-with open(file_path) as f:
-    config = json.load(f)
 
 # Posiotnal Encoding
 class PostionalEncoding(nn.Module):
