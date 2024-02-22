@@ -14,13 +14,16 @@ import os
 # Setup device
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
+with open('C:\\Users\\84898\\Desktop\\project\\WIP\\Machine Translation\\src\\config.json') as f:
+    config = json.load(f)
+
 # Posiotnal Encoding
 class PostionalEncoding(nn.Module):
     def __init__(self, emb_dim: int,
                  dropout: float,
                  maxlen: int = 5000):
         super(PostionalEncoding, self).__init__()
-        den = torch.exp(- torch.arange(0, emb_dim, 2) * math.log(10000) / emb_dim)
+        den = torch.exp(-torch.arange(0, emb_dim, 2) * math.log(10000) / emb_dim)
         pos = torch.arange(0, maxlen).reshape(maxlen, 1)
         pos_embedding = torch.zeros((maxlen, emb_dim))
         pos_embedding[:, 0::2] = torch.sin(pos * den)
@@ -46,26 +49,27 @@ class TokenEmbedding(nn.Module):
 # Translation model:
 class TranslationModel(nn.Module):
     def __init__(self, encoder_layer: int, decoder_layer: int,
-                 d_model: int, n_head: int, 
+                 emb_dim: int, n_head: int, 
                  src_vocab_size: int,
                  tgt_vocab_size: int,  
                  d_ffn: int, dropout: float
     ):
         super(TranslationModel, self).__init__()
-        self.positional_encoding = PostionalEncoding(d_model, dropout)
-        self.src_token_embedding = TokenEmbedding(src_vocab_size, d_model)
-        self.tgt_token_embedding = TokenEmbedding(tgt_vocab_size, d_model)
-        self.Transformer = Transformer(d_model=d_model, nhead=n_head,
+        self.positional_encoding = PostionalEncoding(emb_dim, dropout)
+        self.src_token_embedding = TokenEmbedding(src_vocab_size, emb_dim)
+        self.tgt_token_embedding = TokenEmbedding(tgt_vocab_size, emb_dim)
+        self.Transformer = Transformer(d_model=emb_dim, nhead=n_head,
                                        num_encoder_layers=encoder_layer,
                                        num_decoder_layers=decoder_layer,
-                                       dim_feedforward=d_ffn, dropout=dropout)
-        self.generator = nn.Linear(d_model, tgt_vocab_size)
+                                       dim_feedforward=d_ffn, dropout=dropout,
+                                       batch_first=True)
+        self.generator = nn.Linear(emb_dim, tgt_vocab_size)
         
         logging.basicConfig(filename='model.log', level=logging.INFO, 
                             format='%(asctime)s - %(levelname)s - %(message)s', 
                             datefmt='%d-%b-%y %H:%M:%S')
         logging.info(f"Number of layer: {encoder_layer} encoder, {decoder_layer} decoder")
-        logging.info(f"Model dimension: {d_model}")
+        logging.info(f"Model dimension: {emb_dim}")
         logging.info(f"Feedforward dimension: {d_ffn}")
         logging.info(f"Vocab size: {src_vocab_size} source, {tgt_vocab_size} target")
         logging.info(f"Parameters: {self.count_param()}")
@@ -79,12 +83,14 @@ class TranslationModel(nn.Module):
                                         (self.src_token_embedding(src)), src_mask
                                         )
     
-    def decode(self, tgt: Tensor, memory: Tensor, tgt_mask: Tensor, memory_mask: Tensor):
+    def decode(self, tgt: Tensor, memory: Tensor, tgt_mask: Tensor):
         return self.Transformer.decoder(self.positional_encoding
                                         (self.tgt_token_embedding(tgt)), memory, tgt_mask
                                         )
     
-    def forward(self, src: Tensor, tgt: Tensor,
+    def forward(self, 
+                src: Tensor, 
+                tgt: Tensor,
                 src_mask: Tensor, tgt_mask: Tensor,
                 src_padding_mask: Tensor,
                 tgt_padding_mask: Tensor,
@@ -100,7 +106,8 @@ class TranslationModel(nn.Module):
     
 # Helper function:
 def generate_square_subsequent_mask(sz):
-    mask = (torch.triu(torch.ones(sz, sz), device = DEVICE) == 1).transpose(0, 1)
+    mask = torch.ones(sz, sz, device=DEVICE)
+    mask = (torch.triu(mask) == 1).transpose(0, 1)
     mask = mask.float().masked_fill(mask == 0, float('-inf')).masked_fill(mask == 1, float(0.0))
     return mask
 
@@ -109,7 +116,7 @@ def create_mask(src, tgt):
     tgt_seq_len = tgt.shape[1]
     
     src_mask  = torch.zeros((src_seq_len, src_seq_len), device=DEVICE).type(torch.bool)
-    tgt_mask = generate_square_subsequent_mask(tgt_seq_len).to(DEVICE) # Do we need this to device?
+    tgt_mask = generate_square_subsequent_mask(tgt_seq_len) # Do we need this to device?
     
     src_padding_mask = (src == config["PAD_IDX"])
     tgt_padding_mask = (tgt == config["PAD_IDX"])

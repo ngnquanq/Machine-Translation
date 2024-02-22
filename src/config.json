@@ -9,6 +9,14 @@
     "PAD_IDX": 1,
     "BOS_IDX": 2,
     "EOS_IDX": 3,
-    "BATCH_SIZE": 8
+    "BATCH_SIZE": 8,
     
+    "MODEL_CONFIG": {
+        "d_model": 512,
+        "nhead": 8,
+        "num_encoder_layers": 5,
+        "num_decoder_layers": 5,
+        "dim_feedforward": 512,
+        "dropout": 0.1
+    }
 }
