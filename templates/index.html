@@ -37,12 +37,28 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>MACHINE TRANSLATION</h1>
-        <form action="/translate" method="post">
-            <input type="text" name="source" placeholder="Enter source sentence" required>
-            <input type="submit" value="Translate">
-        </form>
-    </div>
+    <form id="translate-form" action="/translate" method="post">
+        <textarea name="source" placeholder="Enter source sentence" required></textarea>
+        <input type="submit" value="Translate">
+    </form>
+    <textarea id="output" disabled></textarea>
+
+    <script>
+    document.getElementById('translate-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        var form = event.target;
+        var data = new FormData(form);
+
+        fetch(form.action, {
+            method: form.method,
+            body: data
+        })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('output').value = data.translation;
+        });
+    });
+    </script>
 </body>
 </html>
