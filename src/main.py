@@ -1,9 +1,9 @@
 import warnings
 warnings.filterwarnings("ignore")
 
-from data import *
-from model import *
-from trainer import Trainer
+from seq2seq.data import *
+from seq2seq.model import *
+from seq2seq.trainer import Trainer
 import torch
 
 import json
