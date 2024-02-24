@@ -2,3 +2,6 @@ datasets
 sacrebleu
 torchtext
 flask
+accelerate
+underthesea
+datasets
