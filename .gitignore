@@ -90,3 +90,6 @@ target/
 
 # Model weight
 *.pt
+
+# Large file
+bert*
