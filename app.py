@@ -6,7 +6,7 @@ import os
 from flask import Flask, render_template
 from flask import request, jsonify
 from dotenv import load_dotenv
-from src.model import greedy_decode
+from src.seq2seq.model import greedy_decode
 
 app = Flask(__name__)
 
