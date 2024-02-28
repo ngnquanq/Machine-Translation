@@ -13,9 +13,14 @@ from torchtext.data.utils import get_tokenizer
 from torchtext.vocab import build_vocab_from_iterator
 
 import math
+import functools
+import operator
+
 import json
 with open('C:\\Users\\84898\\Desktop\\project\\WIP\\Machine Translation\\src\\config.json') as f:
     config = json.load(f)
+    
+@functools.lru_cache(maxsize=None)
 def prepare_data():
     data = load_dataset(config['DATASET1'], config['DATASET2'])
     SRC_LANGUAGE = config['SRC_LANGUAGE']
