@@ -8,7 +8,7 @@ import functools
 
 # Load model
 @functools.lru_cache(maxsize=None)
-def _load_model():
+def _load_model(weight_path = None):
     # Load model
     train_loader, valid_loader, test_loader, source_vocab, target_vocab, source_text, target_text = prepare_data()
     model = TranslationModel(encoder_layer=hyper.NUM_ENCODER_LAYERS,
@@ -19,6 +19,10 @@ def _load_model():
                                 tgt_vocab_size=len(target_vocab),
                                 d_ffn=hyper.FFN_HID_DIM,
                                 dropout=0.1)
+    if weight_path:
+        model.load_state_dict(torch.load(weight_path))
+    else:
+        pass
     return model, source_vocab, target_vocab, source_text, target_text
 
 def greedy_decode(model, src, src_mask, max_len, start_symbol):
