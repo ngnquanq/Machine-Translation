@@ -26,15 +26,21 @@
     </div>
 
     <script>
-    document.getElementById('translate-button').addEventListener('click', function() {
-        var sourceText = document.getElementById('source').value;
-
-        // Call your translation function here. For example:
-        // var translatedText = translate(sourceText);
-
-        // Then put the result in the output textarea:
-        // document.getElementById('output').value = translatedText;
-    });
+        document.getElementById('translate-button').addEventListener('click', function() {
+            var sourceText = document.getElementById('source').value;
+        
+            fetch('/translate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({input_text: sourceText}),
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('output').value = data.translated_text;
+            });
+        });
     </script>
 </body>
 </html>

@@ -73,4 +73,4 @@ def prepare_data():
                                   collate_fn=collate_fn)
     test_dataloader = DataLoader(data['test']['translation'], batch_size=BATCH_SIZE,
                                  collate_fn=collate_fn)
-    return train_dataloader, valid_dataloader, test_dataloader, vocab_transform[SRC_LANGUAGE], vocab_transform[TGT_LANGUAGE]
+    return train_dataloader, valid_dataloader, test_dataloader, vocab_transform[SRC_LANGUAGE], vocab_transform[TGT_LANGUAGE], text_transforms[SRC_LANGUAGE], text_transforms[TGT_LANGUAGE]
