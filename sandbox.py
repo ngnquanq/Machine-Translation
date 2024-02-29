@@ -11,14 +11,14 @@ import functools
 def _load_model(weight_path = None):
     # Load model
     train_loader, valid_loader, test_loader, source_vocab, target_vocab, source_text, target_text = prepare_data()
-    model = TranslationModel(encoder_layer=hyper.NUM_ENCODER_LAYERS,
-                              decoder_layer=hyper.NUM_DECODER_LAYERS,
-                              emb_dim=hyper.EMB_SIZE,
-                                n_head=hyper.N_HEADS,
-                                src_vocab_size=len(source_vocab),
-                                tgt_vocab_size=len(target_vocab),
-                                d_ffn=hyper.FFN_HID_DIM,
-                                dropout=0.1)
+    model = TranslationModel(num_encoder_layers=hyper.NUM_ENCODER_LAYERS,
+                             num_decoder_layers=hyper.NUM_DECODER_LAYERS,
+                             emb_size=hyper.EMB_SIZE,
+                             nhead=hyper.NHEAD,
+                             src_vocab_size = hyper.SOURCE_VOCAB_SIZE,
+                             tgt_vocab_size = hyper.TARGET_VOCAB_SIZE,
+                             dim_feedforward = hyper.FFN_HID_DIM,
+                             dropout=0.1)
     if weight_path:
         model.load_state_dict(torch.load(weight_path))
     else:

@@ -43,7 +43,7 @@ if __name__=="__main__":
     # Load the models
     start_time = time.time()
     try:
-        transformer, source_vocab, target_vocab, source_text, target_text = _load_model()
+        transformer, source_vocab, target_vocab, source_text, target_text = _load_model(weight_path = './models/transformer.pth')
         print("Model loaded")
         transformer.to(DEVICE)
     except Exception as e:
