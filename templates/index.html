@@ -29,16 +29,16 @@
         document.getElementById('translate-button').addEventListener('click', function() {
             var sourceText = document.getElementById('source').value;
         
-            fetch('/translate', {
+            fetch('/predict', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({input_text: sourceText}),
+                body: JSON.stringify({text: sourceText}),
             })
             .then(response => response.json())
             .then(data => {
-                document.getElementById('output').value = data.translated_text;
+                document.getElementById('output').value = data.response;
             });
         });
     </script>
