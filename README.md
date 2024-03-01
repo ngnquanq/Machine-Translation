@@ -13,6 +13,8 @@ Reimplement Transformer for Machine Translation
 * Redefine the logging approach
 * Write both low-level and high-level reports
 * Add references (papers)
+* Change tokenizer
+* Add rule-based if possible
 
 # Server link
 http://127.0.0.1:5000/
